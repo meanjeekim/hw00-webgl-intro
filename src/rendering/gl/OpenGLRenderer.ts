@@ -6,11 +6,16 @@ import ShaderProgram from './ShaderProgram';
 
 // In this file, `gl` is accessible because it is imported above
 class OpenGLRenderer {
+  color: vec4;
   constructor(public canvas: HTMLCanvasElement) {
   }
 
   setClearColor(r: number, g: number, b: number, a: number) {
     gl.clearColor(r, g, b, a);
+  }
+
+  setColor(color: vec4) {
+    this.color = color;
   }
 
   setSize(width: number, height: number) {
@@ -26,6 +31,7 @@ class OpenGLRenderer {
     let model = mat4.create();
     let viewProj = mat4.create();
     let color = vec4.fromValues(1, 0, 0, 1);
+    // let color = this.color;
 
     mat4.identity(model);
     mat4.multiply(viewProj, camera.projectionMatrix, camera.viewMatrix);

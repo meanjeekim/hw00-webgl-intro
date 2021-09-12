@@ -13,12 +13,14 @@ abstract class Drawable {
 
   abstract create() : void;
 
-  destory() {
+  destroy() { // removes all buffer info
     gl.deleteBuffer(this.bufIdx);
     gl.deleteBuffer(this.bufPos);
     gl.deleteBuffer(this.bufNor);
   }
 
+  // gl call is the same as in c++ -> gl.BLAHBLAH
+  // look it up :D
   generateIdx() {
     this.idxBound = true;
     this.bufIdx = gl.createBuffer();

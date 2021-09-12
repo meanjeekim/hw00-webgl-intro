@@ -15,7 +15,7 @@ class OpenGLRenderer {
   }
 
   setColor(color: vec4) {
-    this.color = color;
+    this.color = vec4.fromValues(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0, color[3]);
   }
 
   setSize(width: number, height: number) {
@@ -30,8 +30,8 @@ class OpenGLRenderer {
   render(camera: Camera, prog: ShaderProgram, drawables: Array<Drawable>) {
     let model = mat4.create();
     let viewProj = mat4.create();
-    let color = vec4.fromValues(1, 0, 0, 1);
-    // let color = this.color;
+    // let color = vec4.fromValues(1, 0, 0, 1);
+    let color = this.color;
 
     mat4.identity(model);
     mat4.multiply(viewProj, camera.projectionMatrix, camera.viewMatrix);

@@ -12,7 +12,7 @@ import Cube from './geometry/Cube';
 // Define an object with application parameters and button callbacks
 // This will be referred to by dat.GUI's functions that add GUI elements.
 const controls = {
-  color: [1, 0, 0, 1],
+  color: [255, 0, 0, 1],
   tesselations: 5,
   'Load Scene': loadScene, // A function pointer, essentially
 };
@@ -84,9 +84,9 @@ function main() {
       icosphere.create();
     }
     renderer.render(camera, lambert, [
-      // icosphere,
+      icosphere,
       // square,
-      cube,
+      // cube,
     ]);
     stats.end();
 

@@ -13,7 +13,7 @@ import Cube from './geometry/Cube';
 // This will be referred to by dat.GUI's functions that add GUI elements.
 const controls = {
   color: [0, 255, 0, 1],
-  tesselations: 5,
+  tesselations: 6,
   'Load Scene': loadScene, // A function pointer, essentially
 };
 
@@ -62,7 +62,7 @@ function main() {
 
   const lambert = new ShaderProgram([
     new Shader(gl.VERTEX_SHADER, require('./shaders/trig-vert.glsl')),
-    new Shader(gl.FRAGMENT_SHADER, require('./shaders/noise-frag.glsl')),
+    new Shader(gl.FRAGMENT_SHADER, require('./shaders/planet-frag.glsl')),
   ]);
 
   // Add controls to the gui

@@ -32,6 +32,9 @@ function loadScene() {
 }
 
 function main() {
+  // Initial time
+  let time = 1;
+
   // Initial display for framerate
   const stats = Stats();
   stats.setMode(0);
@@ -61,8 +64,13 @@ function main() {
   gl.enable(gl.DEPTH_TEST);
 
   const lambert = new ShaderProgram([
+    new Shader(gl.VERTEX_SHADER, require('./shaders/lambert-vert.glsl')),
+    new Shader(gl.FRAGMENT_SHADER, require('./shaders/lambert-frag.glsl')),
+  ]);
+
+  const noise = new ShaderProgram([
     new Shader(gl.VERTEX_SHADER, require('./shaders/trig-vert.glsl')),
-    new Shader(gl.FRAGMENT_SHADER, require('./shaders/planet-frag.glsl')),
+    new Shader(gl.FRAGMENT_SHADER, require('./shaders/noise-frag.glsl')),
   ]);
 
   // Add controls to the gui
@@ -83,11 +91,12 @@ function main() {
       icosphere = new Icosphere(vec3.fromValues(0, 0, 0), 1, prevTesselations);
       icosphere.create();
     }
-    renderer.render(camera, lambert, [
+    renderer.render(camera, time, noise, [
       icosphere,
       // square,
       // cube,
     ]);
+    time++;
     stats.end();
 
     // Tell the browser to call `tick` again whenever it renders a new frame

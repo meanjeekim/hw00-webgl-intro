@@ -31,6 +31,17 @@ vec3 hash(vec3 p) {
 	return -1.0 + 2.0*fract(sin(p)*43758.5453123);
 }
 
+float GetBias(float time, float bias) {
+    return (time / ((((1.0/bias) - 2.0)*(1.0 - time))*1.0));
+}
+
+float GetGain(float time, float gain) {
+    if(time < 0.5)
+        return GetBias(time * 2.0, gain)/2.0;
+    else
+        return GetBias(time * 2.0 - 1.0, 1.0 - gain)/2.0 + 0.5;
+}
+
 float noise(vec3 p)
 {
     vec3 indices = floor(p);
@@ -41,11 +52,25 @@ float noise(vec3 p)
     return mix( mix( mix(  dot(  hash( indices + vec3(0.0,0.0,0.0)),  fracts - vec3(0.0,0.0,0.0)),
                            dot(  hash( indices + vec3(1.0,0.0,0.0)),  fracts - vec3(1.0,0.0,0.0)), u.x),
                      mix(  dot(  hash( indices + vec3(0.0,1.0,0.0)),  fracts - vec3(0.0,1.0,0.0)),
-                           dot(  hash( indices + vec3(0.0,0.0,1.0)),  fracts - vec3(0.0,0.0,1.0)), u.x), u.y),
+                           dot(  hash( indices + vec3(1.0,1.0,0.0)),  fracts - vec3(1.0,1.0,0.0)), u.x), u.y),
                 mix( mix(  dot(  hash( indices + vec3(0.0,0.0,1.0)),  fracts - vec3(0.0,0.0,1.0)),
                            dot(  hash( indices + vec3(1.0,0.0,1.0)),  fracts - vec3(1.0,0.0,1.0)), u.x),
                      mix(  dot(  hash( indices + vec3(0.0,1.0,1.0)),  fracts - vec3(0.0,1.0,1.0)),
                            dot(  hash( indices + vec3(1.0,1.0,1.0)),  fracts - vec3(1.0,1.0,1.0)), u.x), u.y), u.z);
+}
+
+float fbm(vec3 p) {
+    const int octaves = 8;
+    float total = 0.;
+    float persistence = 1. / 2.0f;
+
+    for (int i = 0; i < octaves; i++) {
+        float amplitude = pow(persistence, float(i));
+        float frequency = pow(2., float(i));
+
+        total += amplitude*noise(frequency*p);
+    }
+    return total;
 }
 
 void main()
@@ -67,7 +92,8 @@ void main()
         // Compute final shaded color
         // out_Col = vec4(diffuseColor.rgb * lightIntensity, diffuseColor.a);
 
-        vec3 col = vec3(noise(fs_Pos.rgb * 20.0));
+        vec3 col = vec3(fbm(fs_Pos.rgb * 7.0));
+        
 
         out_Col = vec4(col, 1.0);
 }
